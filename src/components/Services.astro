@@ -1,0 +1,31 @@
+---
+import { type Service } from "~/lib/types"
+import ServiceItem from "./ServiceItem.astro"
+
+export const services: Service[] = [
+	{
+		title: "FOTOGRAFIA MODOWA",
+		text: "Moda to coś więcej niż ubrania. To charakter, emocje i sposób, w jaki chcemy być postrzegani. Tworzę kadry dla marek, projektantów i butików, które chcą pokazać swoje kolekcje w sposób przyciągający uwagę. Od lookbooków po kampanie, które opowiadają historię marki.",
+	},
+	{
+		title: "PORTRET & SENSUAL DAMSKA I MĘSKA ",
+		text: "Nie musisz być modelką/modelem ani wiedzieć, jak pozować. Nie musisz też niczego udowadniać. Podczas sesji szukamy Twojego charakteru, emocji i tego, co czyni Cię wyjątkową lub wyjątkowym. Od subtelnych portretów, przez kobiecą i męską sensualność, aż po artystyczny akt. Bez udawania. Na Twoich zasadach.",
+	},
+	{
+		title: "WIZERUNEK",
+		text: "Zanim ktoś pozna Twoją historię, często najpierw widzi Twój wizerunek. Zadbajmy o to, żeby mówił o Tobie to, co naprawdę chcesz przekazać. Tworzę portrety biznesowe i zdjęcia dla osób, które rozwijają własne marki, budują swoją pozycję i chcą pokazać się światu z pewnością siebie.",
+	},
+	{
+		title: "ZAKOCHANI",
+		text: "Nie trzeba idealnych póz ani wyreżyserowanych gestów. Najpiękniejsze jest to, co dzieje się między Wami. Spojrzenia, bliskość, śmiech i drobne gesty, których często nawet nie zauważacie. Możemy postawić na naturalność albo stworzyć coś bardziej modowego i filmowego. Najważniejsze, żeby te zdjęcia były naprawdę Wasze.",
+	},
+]
+---
+
+<section>
+	<ul>
+		{services.map(service => (
+			<ServiceItem {...service} />
+		))}
+	</ul>
+</section>
