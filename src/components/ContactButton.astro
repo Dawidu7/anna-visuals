@@ -1,0 +1,12 @@
+---
+type Props = {
+	href: string
+	text: string
+}
+
+const { href, text } = Astro.props
+---
+
+<a href={href} class="flex-1">
+	{text}
+</a>
