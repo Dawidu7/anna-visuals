@@ -1,1 +1,5 @@
-export type Service = { title: string; text: string }
+export type Service = {
+	title: string
+	text: string
+	image: ImageMetadata | null
+}

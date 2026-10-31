@@ -1,0 +1,47 @@
+---
+import { Image } from "astro:assets"
+
+const images = Object.values(
+	import.meta.glob<{ default: ImageMetadata }>(
+		"../assets/images/gallery/*.jpg",
+		{ eager: true },
+	),
+).map(({ default: src }) => ({
+	src,
+}))
+---
+
+<section
+	class="group relative mx-auto max-w-5xl overflow-hidden px-4 data-[expanded=true]:pb-12"
+	style="max-height: 100dvh;"
+	data-expanded="false"
+>
+	<ul class="columns-2 space-y-4 md:columns-3">
+		{images.map(({ src }) => (
+			<li>
+				<Image src={src} alt="" loading="lazy" />
+			</li>
+		))}
+	</ul>
+	<div class="absolute inset-x-0 bottom-0 grid h-48 place-items-center bg-linear-to-t from-white to-transparent group-data-[expanded=true]:opacity-0" />
+	<button type="button" class="absolute inset-x-0 bottom-3 cursor-pointer">
+		Show more
+	</button>
+</section>
+
+<script>
+	const gallery = document.querySelector("section")!
+	const galleryCollapsedHeight = getComputedStyle(gallery).maxHeight
+	const galleryCollapseButton = gallery.querySelector("button")!
+
+	galleryCollapseButton.addEventListener("click", () => {
+		const isExpanded = !(gallery.dataset.expanded === "true")
+		gallery.dataset.expanded = String(isExpanded)
+
+		gallery.style.maxHeight = isExpanded
+			? `${gallery.scrollHeight}px`
+			: galleryCollapsedHeight
+
+		galleryCollapseButton.innerText = isExpanded ? "Show less" : "Show more"
+	})
+</script>
