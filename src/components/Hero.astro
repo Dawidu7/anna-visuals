@@ -1,0 +1,9 @@
+---
+import { Image } from "astro:assets"
+import heroImage from "~/assets/images/hero.jpg"
+---
+
+<section class="relative grid min-h-[90dvh] place-items-center overflow-hidden">
+	<Image src={heroImage} alt="Anna Visuals Hero" class="absolute" />
+	<h1 class="relative text-7xl font-semibold text-white">Anna Visuals</h1>
+</section>
