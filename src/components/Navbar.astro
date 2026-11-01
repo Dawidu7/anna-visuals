@@ -1,0 +1,32 @@
+---
+const items: { href: string; text: string }[] = [
+	{ href: "#gallery", text: "Zdjęcia" },
+	{ href: "#services", text: "Serwisy" },
+	{ href: "#about", text: "O mnie" },
+	{ href: "#contact", text: "Kontakt" },
+]
+---
+
+<nav
+	class="fixed z-50 w-full bg-white/70 py-4 data-[transparent=false]:backdrop-blur-md data-[transparent=true]:bg-transparent data-[transparent=true]:text-white"
+	data-transparent="true"
+>
+	<ul class="flex justify-center gap-20">
+		{items.map(({ href, text }) => (
+			<li>
+				<a href={href}>{text}</a>
+			</li>
+		))}
+	</ul>
+</nav>
+
+<script>
+	const hero = document.querySelector("#hero")!
+	const nav = document.querySelector("nav")!
+
+	const obersver = new IntersectionObserver(([entry]) => {
+		nav.dataset.transparent = String(entry.isIntersecting)
+	})
+
+	obersver.observe(hero)
+</script>

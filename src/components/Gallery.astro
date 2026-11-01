@@ -12,7 +12,8 @@ const images = Object.values(
 ---
 
 <section
-	class="group relative mx-auto max-w-5xl overflow-hidden px-4 pt-8 data-[expanded=true]:pb-12"
+	id="gallery"
+	class="group relative mx-auto max-w-5xl overflow-hidden px-4 pt-16 data-[expanded=true]:pb-12"
 	style="max-height: 150dvh;"
 	data-expanded="false"
 >
@@ -24,15 +25,21 @@ const images = Object.values(
 		))}
 	</ul>
 	<div class="absolute inset-x-0 bottom-0 grid h-48 place-items-center bg-linear-to-t from-white to-transparent group-data-[expanded=true]:opacity-0" />
-	<button type="button" class="absolute inset-x-0 bottom-3 cursor-pointer">
+	<button
+		type="button"
+		class="absolute inset-x-0 bottom-3 cursor-pointer"
+		data-collapse-button
+	>
 		Show more
 	</button>
 </section>
 
 <script>
-	const gallery = document.querySelector("section")!
+	const gallery = document.querySelector<HTMLElement>("#gallery")!
 	const galleryCollapsedHeight = getComputedStyle(gallery).maxHeight
-	const galleryCollapseButton = gallery.querySelector("button")!
+	const galleryCollapseButton = gallery.querySelector<HTMLButtonElement>(
+		"[data-collapse-button]",
+	)!
 
 	galleryCollapseButton.addEventListener("click", () => {
 		const isExpanded = !(gallery.dataset.expanded === "true")
