@@ -1,12 +1,29 @@
 ---
-import { Image } from "astro:assets"
+import { getImage } from "astro:assets"
+import heroMobileImage from "~/assets/images/hero-mobile.jpg"
 import heroImage from "~/assets/images/hero.jpg"
+
+const hero = await getImage({ src: heroImage, format: "webp", width: 2400 })
+const heroMobile = await getImage({
+	src: heroMobileImage,
+	format: "webp",
+	width: 1200,
+})
 ---
 
-<section
-	id="hero"
-	class="relative grid min-h-[90dvh] place-items-center overflow-hidden"
->
-	<Image src={heroImage} alt="Anna Visuals Hero" class="absolute top-0" />
-	<h1 class="relative text-7xl font-semibold text-white">Anna Visuals</h1>
+<section id="hero" class="relative grid min-h-svh place-items-center">
+	<picture class="absolute inset-0">
+		<source media="(min-width: 768px)" srcset={hero.src} />
+		<img
+			src={heroMobile.src}
+			alt="Anna Visuals Hero"
+			width={heroMobile.options.width}
+			height={heroMobile.options.height}
+			fetchpriority="high"
+			class="size-full object-cover"
+		/>
+	</picture>
+	<h1 class="relative px-4 text-5xl font-semibold text-white md:text-7xl">
+		Anna Visuals
+	</h1>
 </section>
