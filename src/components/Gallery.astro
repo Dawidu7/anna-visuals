@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets"
+import Button from "./ui/Button.astro"
 
 const images = Object.values(
 	import.meta.glob<{ default: ImageMetadata }>(
@@ -20,36 +21,28 @@ const images = Object.values(
 	<ul class="columns-2 space-y-4 md:columns-3">
 		{images.map(({ src }) => (
 			<li class="overflow-hidden">
-				<button type="button" data-modal-trigger>
+				<Button data-modal-trigger>
 					<Image
 						src={src}
 						alt=""
 						loading="lazy"
 						class="cursor-pointer transition-[scale] hover:scale-105"
 					/>
-				</button>
+				</Button>
 			</li>
 		))}
 	</ul>
 	<div class="absolute inset-x-0 bottom-0 grid h-48 place-items-center bg-linear-to-t from-white to-transparent group-data-[expanded=true]:opacity-0" />
-	<button
-		type="button"
-		class="absolute inset-x-0 bottom-3 cursor-pointer"
-		data-collapse-button
-	>
-		Show more
-	</button>
+	<Button class="absolute inset-x-0 bottom-3" data-collapse-button>
+		Więcej &#x2193;
+	</Button>
 </section>
 
 <dialog class="m-auto backdrop:bg-black/80">
 	<img src="" alt="" class="max-h-[90dvh] max-w-[90dvw] object-contain" />
-	<button
-		type="button"
-		class="absolute top-4 right-4 cursor-pointer text-2xl text-white"
-		data-close
-	>
+	<Button class="absolute top-4 right-4 text-2xl text-white" data-close>
 		&#x2715;
-	</button>
+	</Button>
 </dialog>
 
 <script>
@@ -67,7 +60,9 @@ const images = Object.values(
 			? `${gallery.scrollHeight}px`
 			: galleryCollapsedHeight
 
-		galleryCollapseButton.innerText = isExpanded ? "Show less" : "Show more"
+		galleryCollapseButton.innerHTML = isExpanded
+			? "Mniej &#x2191;"
+			: "Więcej &#x2193;"
 	})
 </script>
 
