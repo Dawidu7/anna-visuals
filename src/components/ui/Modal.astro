@@ -4,7 +4,7 @@ import { cn } from "~/lib/utils"
 import Button from "./Button.astro"
 
 const variants = {
-	default: "",
+	default: "px-8 py-8",
 	full: "",
 }
 
@@ -27,7 +27,10 @@ const { class: className, variant = "default", ...props } = Astro.props
 	<slot />
 
 	<Button
-		class="absolute top-4 right-4 text-2xl leading-none text-white"
+		class={cn(
+			"absolute top-4 right-4 text-2xl leading-none",
+			variant === "full" ? "text-white" : "text-black",
+		)}
 		data-modal-close
 	>
 		&#x2715;

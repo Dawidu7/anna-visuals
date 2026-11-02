@@ -1,32 +1,73 @@
 ---
+import ContactButton from "./ContactButton.astro"
+import Button from "./ui/Button.astro"
+import Modal from "./ui/Modal.astro"
+
 const items: { href: string; text: string }[] = [
 	{ href: "#gallery", text: "Zdjęcia" },
 	{ href: "#services", text: "Serwisy" },
 	{ href: "#about", text: "O mnie" },
-	{ href: "#contact", text: "Kontakt" },
 ]
 ---
 
 <nav
-	class="fixed z-50 w-full bg-white/70 py-4 data-[transparent=false]:backdrop-blur-md data-[transparent=true]:bg-transparent data-[transparent=true]:text-white"
-	data-transparent="true"
+	class="group fixed top-0 z-50 w-full bg-white/70 py-4 data-[hero=false]:backdrop-blur-md data-[hero=true]:bg-transparent data-[hero=true]:text-white"
+	data-hero="true"
 >
-	<ul class="flex justify-center gap-20">
-		{items.map(({ href, text }) => (
-			<li>
-				<a href={href}>{text}</a>
-			</li>
-		))}
-	</ul>
+	<div class="mx-auto grid max-w-6xl grid-cols-3 items-center">
+		<a href="#hero" class="text-xl font-semibold">
+			Anna Visuals
+		</a>
+		<ul class="flex justify-center gap-20">
+			{items.map(({ href, text }) => (
+				<li>
+					<a href={href}>{text}</a>
+				</li>
+			))}
+		</ul>
+		<Button
+			class="justify-self-end rounded-md bg-black px-4 py-2 text-white"
+			data-modal-open="contact-modal"
+		>
+			Kontakt
+		</Button>
+	</div>
 </nav>
 
+<Modal id="contact-modal">
+	<div class="mx-auto max-w-xl space-y-6 text-center">
+		<h2 class="text-4xl font-semibold uppercase">KONTAKT</h2>
+		<p class="mx-auto text-justify [text-align-last:center]">
+			Masz pomysł na sesję, tworzysz własną markę, a może po prostu czujesz, że
+			to dobry moment, żeby zrobić coś dla siebie? Napisz do mnie. Porozmawiamy
+			o Twoim pomyśle i wspólnie znajdziemy sposób, żeby przełożyć go na
+			zdjęcia.
+		</p>
+		<div class="flex gap-6">
+			<ContactButton
+				href="https://www.instagram.com/anna_visuals_ph"
+				class="bg-linear-to-tr from-[#f58529] via-[#dd2a7b] to-[#515bd4] text-white"
+			>
+				Instagram
+			</ContactButton>
+			<ContactButton
+				href="https://wa.me/48607708244"
+				class="bg-linear-to-tr from-[#128c7e] to-[#25D366] text-white"
+			>
+				WhatsApp
+			</ContactButton>
+		</div>
+	</div>
+</Modal>
+
 <script>
-	const hero = document.querySelector("#hero")!
 	const nav = document.querySelector("nav")!
+	const hero = document.querySelector("#hero")!
 
-	const obersver = new IntersectionObserver(([entry]) => {
-		nav.dataset.transparent = String(entry.isIntersecting)
-	})
-
-	obersver.observe(hero)
+	new IntersectionObserver(
+		([entry]) => {
+			nav.dataset.hero = String(entry.isIntersecting)
+		},
+		{ rootMargin: "-40px 0px 0px 0px" },
+	).observe(hero)
 </script>

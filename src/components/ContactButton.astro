@@ -1,12 +1,47 @@
 ---
-type Props = {
-	href: string
-	text: string
-}
+import { type HTMLAttributes } from "astro/types"
+import { cn } from "~/lib/utils"
 
-const { href, text } = Astro.props
+type Props = HTMLAttributes<"a"> & { href: string }
+
+const { class: className, ...props } = Astro.props
 ---
 
-<a href={href} class="flex-1">
-	{text}
+<!--
+<ContactButton
+  href="https://www.instagram.com/anna_visuals_ph"
+  class="bg-linear-to-tr from-[#f58529] via-[#dd2a7b] to-[#515bd4] text-white"
+>
+  Instagram
+</ContactButton>
+<ContactButton
+  href="https://wa.me/48607708244"
+  class="bg-linear-to-tr from-[#128c7e] to-[#25D366] text-white"
+>
+  WhatsApp
+</ContactButton>
+-->
+
+<a
+	target="_blank"
+	rel="noopener noreferrer"
+	class={cn(
+		"flex w-full items-center justify-between rounded-md px-4 py-3 shadow-md",
+		className,
+	)}
+	{...props}
+>
+	<slot />
+	<svg
+		viewBox="0 0 24 24"
+		class="size-5"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		aria-hidden="true"
+	>
+		<path d="M7 17 17 7M8 7h9v9" />
+	</svg>
 </a>
