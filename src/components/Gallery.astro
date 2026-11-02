@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets"
 import Button from "./ui/Button.astro"
+import Modal from "./ui/Modal.astro"
 
 const images = Object.values(
 	import.meta.glob<{ default: ImageMetadata }>(
@@ -21,36 +22,34 @@ const images = Object.values(
 	<ul class="columns-2 space-y-4 md:columns-3">
 		{images.map(({ src }) => (
 			<li class="overflow-hidden">
-				<Button data-modal-trigger>
+				<Button data-modal-open="image-modal">
 					<Image
 						src={src}
 						alt=""
 						loading="lazy"
-						class="cursor-pointer transition-[scale] hover:scale-105"
+						class="transition-[scale] hover:scale-105"
 					/>
 				</Button>
 			</li>
 		))}
 	</ul>
-	<div class="absolute inset-x-0 bottom-0 grid h-48 place-items-center bg-linear-to-t from-white to-transparent group-data-[expanded=true]:opacity-0" />
+	<div class="pointer-events-none absolute inset-x-0 bottom-0 grid h-48 place-items-center bg-linear-to-t from-white to-transparent group-data-[expanded=true]:opacity-0" />
 	<Button class="absolute inset-x-0 bottom-3" data-collapse-button>
 		Więcej &#x2193;
 	</Button>
 </section>
 
-<dialog class="m-auto backdrop:bg-black/80">
+<Modal id="image-modal" variant="full">
 	<img src="" alt="" class="max-h-[90dvh] max-w-[90dvw] object-contain" />
-	<Button class="absolute top-4 right-4 text-2xl text-white" data-close>
-		&#x2715;
-	</Button>
-</dialog>
+</Modal>
 
 <script>
 	const gallery = document.querySelector<HTMLElement>("#gallery")!
-	const galleryCollapsedHeight = getComputedStyle(gallery).maxHeight
 	const galleryCollapseButton = gallery.querySelector<HTMLButtonElement>(
 		"[data-collapse-button]",
 	)!
+
+	const galleryCollapsedHeight = getComputedStyle(gallery).maxHeight
 
 	galleryCollapseButton.addEventListener("click", () => {
 		const isExpanded = !(gallery.dataset.expanded === "true")
@@ -64,25 +63,15 @@ const images = Object.values(
 			? "Mniej &#x2191;"
 			: "Więcej &#x2193;"
 	})
-</script>
 
-<script>
-	const modal = document.querySelector("dialog")!
-
-	document
-		.querySelectorAll<HTMLButtonElement>("[data-modal-trigger]")!
+	const modalImg = document.querySelector<HTMLImageElement>("#image-modal img")!
+	gallery
+		.querySelectorAll<HTMLButtonElement>("[data-modal-open]")
 		.forEach(button => {
 			button.addEventListener("click", () => {
-				modal.querySelector("img")!.src = button.querySelector("img")!.src
-				modal.showModal()
+				const img = button.querySelector("img")!
+				modalImg.src = img.src
+				modalImg.alt = img.alt
 			})
 		})
-
-	modal.addEventListener("click", e => {
-		if (e.target === modal) modal.close()
-	})
-
-	modal
-		.querySelector<HTMLButtonElement>("[data-close]")!
-		.addEventListener("click", () => modal.close())
 </script>

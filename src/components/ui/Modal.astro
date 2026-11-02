@@ -1,0 +1,57 @@
+---
+import { type HTMLAttributes } from "astro/types"
+import { cn } from "~/lib/utils"
+import Button from "./Button.astro"
+
+const variants = {
+	default: "",
+	full: "",
+}
+
+type Props = HTMLAttributes<"dialog"> & {
+	id: string
+	variant?: keyof typeof variants
+}
+
+const { class: className, variant = "default", ...props } = Astro.props
+---
+
+<dialog
+	class={cn(
+		"m-auto rounded-lg shadow-lg backdrop:bg-black/70",
+		variants[variant],
+		className,
+	)}
+	{...props}
+>
+	<slot />
+
+	<Button
+		class="absolute top-4 right-4 text-2xl leading-none text-white"
+		data-modal-close
+	>
+		&#x2715;
+	</Button>
+</dialog>
+
+<script>
+	document.addEventListener("click", e => {
+		const target = e.target as HTMLElement
+
+		const trigger = target.closest<HTMLButtonElement>("[data-modal-open]")
+		if (trigger) {
+			e.preventDefault()
+			document
+				.querySelector<HTMLDialogElement>(`#${trigger.dataset.modalOpen}`)
+				?.showModal()
+			return
+		}
+
+		if (target.closest("[data-modal-close]")) {
+			target.closest("dialog")?.close()
+			return
+		}
+
+		if (target instanceof HTMLDialogElement && target.open) target.close()
+	})
+</script>
