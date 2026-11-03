@@ -10,23 +10,48 @@ const items: { href: string; text: string }[] = [
 ]
 ---
 
-<nav
-	class="group fixed top-0 z-50 w-full bg-white/70 py-4 data-[hero=false]:backdrop-blur-md data-[hero=true]:bg-transparent data-[hero=true]:text-white"
-	data-hero="true"
->
-	<div class="mx-auto grid max-w-6xl grid-cols-3 items-center">
+<nav class="group fixed top-0 z-50 w-full bg-white px-8 py-4" data-open="false">
+	<div class="mx-auto flex max-w-6xl items-center justify-between">
 		<a href="#hero" class="text-xl font-semibold">
 			Anna Visuals
 		</a>
-		<ul class="flex justify-center gap-20">
+		<Button class="sm:hidden" data-nav-open>
+			<svg
+				class="size-6"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				aria-hidden="true"
+			>
+				<path d="M4 6h16M4 12h16M4 18h16" />
+			</svg>
+		</Button>
+		<ul class="flex gap-12 max-sm:fixed max-sm:inset-0 max-sm:hidden max-sm:flex-col max-sm:items-end max-sm:bg-black/50 max-sm:px-10 max-sm:py-8 max-sm:text-4xl max-sm:font-semibold max-sm:text-white max-sm:backdrop-blur-md max-sm:group-data-[open=true]:flex sm:justify-center md:gap-20">
+			<li class="w-fit sm:hidden">
+				<Button data-nav-close>
+					<svg
+						class="size-12"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						aria-hidden="true"
+					>
+						<path d="M6 6l12 12M18 6L6 18" />
+					</svg>
+				</Button>
+			</li>
 			{items.map(({ href, text }) => (
-				<li>
+				<li class="w-fit">
 					<a href={href}>{text}</a>
 				</li>
 			))}
 		</ul>
 		<Button
-			class="justify-self-end rounded-md bg-black px-4 py-2 text-white"
+			class="justify-self-end rounded-md bg-black px-4 py-2 text-white max-sm:hidden"
 			data-modal-open="contact-modal"
 		>
 			Kontakt
@@ -62,12 +87,31 @@ const items: { href: string; text: string }[] = [
 
 <script>
 	const nav = document.querySelector("nav")!
-	const hero = document.querySelector("#hero")!
+	const closeMenu = () => {
+		nav.dataset.open = "false"
+		document.body.style.overflow = ""
+	}
 
-	new IntersectionObserver(
-		([entry]) => {
-			nav.dataset.hero = String(entry.isIntersecting)
-		},
-		{ rootMargin: "-40px 0px 0px 0px" },
-	).observe(hero)
+	nav
+		.querySelector<HTMLButtonElement>("[data-nav-open]")
+		?.addEventListener("click", () => {
+			nav.dataset.open = "true"
+			document.body.style.overflow = "hidden"
+		})
+	nav
+		.querySelector<HTMLButtonElement>("[data-nav-close]")
+		?.addEventListener("click", closeMenu)
+
+	nav.querySelectorAll("a").forEach(link => {
+		link.addEventListener("click", closeMenu)
+	})
+
+	document.addEventListener("keydown", e => {
+		if (e.key === "Escape") closeMenu()
+	})
+
+	const menu = nav.querySelector("ul")!
+	menu.addEventListener("click", e => {
+		if (e.target === menu) closeMenu()
+	})
 </script>
