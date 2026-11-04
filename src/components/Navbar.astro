@@ -8,6 +8,9 @@ const items: { href: string; text: string }[] = [
 	{ href: "#services", text: "Serwisy" },
 	{ href: "#about", text: "O mnie" },
 ]
+
+const liClass =
+	"w-fit max-sm:opacity-0 max-sm:translate-y-4 max-sm:transition-all max-sm:duration-500 max-sm:ease-out max-sm:group-data-[open=true]:translate-y-0 max-sm:group-data-[open=true]:opacity-100"
 ---
 
 <nav class="group fixed top-0 z-50 w-full bg-white px-8 py-4" data-open="false">
@@ -28,8 +31,8 @@ const items: { href: string; text: string }[] = [
 				<path d="M4 6h16M4 12h16M4 18h16" />
 			</svg>
 		</Button>
-		<ul class="flex gap-12 max-sm:fixed max-sm:inset-0 max-sm:hidden max-sm:flex-col max-sm:items-end max-sm:bg-black/50 max-sm:px-10 max-sm:py-8 max-sm:text-4xl max-sm:font-semibold max-sm:text-white max-sm:backdrop-blur-md max-sm:group-data-[open=true]:flex sm:justify-center md:gap-20">
-			<li class="w-fit sm:hidden">
+		<ul class="flex gap-12 max-sm:pointer-events-none max-sm:invisible max-sm:fixed max-sm:inset-0 max-sm:flex-col max-sm:items-end max-sm:bg-black/50 max-sm:px-10 max-sm:py-8 max-sm:text-4xl max-sm:font-semibold max-sm:text-white max-sm:opacity-0 max-sm:backdrop-blur-md max-sm:transition-opacity max-sm:duration-500 max-sm:group-data-[open=true]:pointer-events-auto max-sm:group-data-[open=true]:visible max-sm:group-data-[open=true]:opacity-100 sm:justify-center md:gap-20">
+			<li class={`sm:hidden ${liClass}`}>
 				<Button data-nav-close>
 					<svg
 						class="size-12"
@@ -44,11 +47,14 @@ const items: { href: string; text: string }[] = [
 					</svg>
 				</Button>
 			</li>
-			{items.map(({ href, text }) => (
-				<li class="w-fit">
+			{items.map(({ href, text }, i) => (
+				<li class={liClass} style={`transition-delay: ${i * 100 + 100}ms`}>
 					<a href={href}>{text}</a>
 				</li>
 			))}
+			<li class={`sm:hidden ${liClass}`} style="transition-delay: 400ms">
+				<Button data-modal-open="contact-modal">Kontakt</Button>
+			</li>
 		</ul>
 		<Button
 			class="justify-self-end rounded-md bg-black px-4 py-2 text-white max-sm:hidden"
@@ -103,7 +109,11 @@ const items: { href: string; text: string }[] = [
 		?.addEventListener("click", closeMenu)
 
 	nav.querySelectorAll("a").forEach(link => {
-		link.addEventListener("click", closeMenu)
+		link.addEventListener("click", e => {
+			e.preventDefault()
+			closeMenu()
+			document.querySelector(link.hash)?.scrollIntoView({ behavior: "smooth" })
+		})
 	})
 
 	document.addEventListener("keydown", e => {
@@ -114,4 +124,11 @@ const items: { href: string; text: string }[] = [
 	menu.addEventListener("click", e => {
 		if (e.target === menu) closeMenu()
 	})
+
+	nav
+		.querySelector<HTMLButtonElement>("[data-modal-open]")
+		?.addEventListener("click", () => {
+			if (nav.dataset.open === "false") return
+			closeMenu()
+		})
 </script>
