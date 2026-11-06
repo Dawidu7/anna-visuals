@@ -18,7 +18,9 @@ const { class: className, variant = "default", ...props } = Astro.props
 
 <dialog
 	class={cn(
-		"m-auto rounded-lg shadow-lg backdrop:bg-black/70",
+		"m-auto scale-90 rounded-lg opacity-0 shadow-lg backdrop:bg-black/70",
+		"transition-[opacity,scale,display,overlay] transition-discrete duration-300 ease-out",
+		"open:scale-100 open:opacity-100 starting:open:scale-90 starting:open:opacity-0",
 		variants[variant],
 		className,
 	)}
