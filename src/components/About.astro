@@ -2,6 +2,7 @@
 import Button from "./ui/Button.astro"
 ---
 
+--- import Button from "./ui/Button.astro" ---
 <section id="about" class="space-y-6 px-6 py-8 text-center">
 	<h2 class="text-4xl font-semibold uppercase">O MNIE</h2>
 	<div class="mx-auto max-w-lg space-y-4">
@@ -17,8 +18,8 @@ import Button from "./ui/Button.astro"
 			Warsztatów Mentoringow Ect
 		</p>
 		<Button
-			data-modal-open="contact-modal"
 			class="w-full rounded-md bg-black py-2 text-white shadow-md shadow-black/80"
+			data-modal-open="contact-modal"
 		>
 			Skontaktuj się
 		</Button>
