@@ -2,6 +2,7 @@
 import { getImage } from "astro:assets"
 import heroMobileImage from "~/assets/images/hero-mobile.jpg"
 import heroImage from "~/assets/images/hero.jpg"
+import Button from "./ui/Button.astro"
 
 const hero = await getImage({ src: heroImage, format: "webp", width: 2400 })
 const heroMobile = await getImage({
@@ -23,7 +24,15 @@ const heroMobile = await getImage({
 			class="size-full object-cover"
 		/>
 	</picture>
-	<h1 class="relative px-4 text-5xl font-semibold text-white md:text-7xl">
-		Anna Visuals
-	</h1>
+	<div class="relative grid place-items-center gap-4">
+		<h1 class="px-4 text-5xl font-semibold text-white md:text-7xl">
+			Anna Visuals
+		</h1>
+		<Button
+			class="rounded-md bg-black px-4 py-2 text-white shadow-md shadow-black/60"
+			data-modal-open="contact-modal"
+		>
+			Skontaktuj się
+		</Button>
+	</div>
 </section>

@@ -1,14 +1,26 @@
+---
+import Button from "./ui/Button.astro"
+---
+
 <section id="about" class="space-y-6 px-6 py-8 text-center">
 	<h2 class="text-4xl font-semibold uppercase">O MNIE</h2>
-	<p class="mx-auto max-w-md text-justify [text-align-last:center]">
-		Za Anna Visuals stoi kobieta, która przez lata odkładała swoje marzenia na
-		później, aż w końcu postanowiła dać im szansę. Fotografia stała się dla mnie
-		czymś więcej niż pracą. To sposób patrzenia na ludzi, emocje i świat.
-		Najbardziej lubię moment, w którym z pozornie zwyczajnej chwili powstaje coś
-		wyjątkowego. Przestałam odkładać marzenia, zaczęłam działać. Od kilka lat
-		tworzę spotkania fotograficzne, pomagam budować portfolia, zawierać
-		kontakty. Współtworzę studio fotograficzne w Bielsku-Białej, które jest
-		splotem spotkań ludzi i różnych wydarzeń Spotkań fotograficznych Warsztatów
-		Mentoringow Ect
-	</p>
+	<div class="mx-auto max-w-lg space-y-4">
+		<p class="text-justify [text-align-last:center]">
+			Za Anna Visuals stoi kobieta, która przez lata odkładała swoje marzenia na
+			później, aż w końcu postanowiła dać im szansę. Fotografia stała się dla
+			mnie czymś więcej niż pracą. To sposób patrzenia na ludzi, emocje i świat.
+			Najbardziej lubię moment, w którym z pozornie zwyczajnej chwili powstaje
+			coś wyjątkowego. Przestałam odkładać marzenia, zaczęłam działać. Od kilka
+			lat tworzę spotkania fotograficzne, pomagam budować portfolia, zawierać
+			kontakty. Współtworzę studio fotograficzne w Bielsku-Białej, które jest
+			splotem spotkań ludzi i różnych wydarzeń Spotkań fotograficznych
+			Warsztatów Mentoringow Ect
+		</p>
+		<Button
+			data-modal-open="contact-modal"
+			class="w-full rounded-md bg-black py-2 text-white shadow-md shadow-black/80"
+		>
+			Skontaktuj się
+		</Button>
+	</div>
 </section>
