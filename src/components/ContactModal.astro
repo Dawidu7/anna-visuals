@@ -1,0 +1,30 @@
+---
+import ContactButton from "./ContactButton.astro"
+import Modal from "./ui/Modal.astro"
+---
+
+<Modal id="contact-modal">
+	<div class="mx-auto max-w-lg space-y-6 text-center">
+		<h2 class="text-4xl font-semibold uppercase">KONTAKT</h2>
+		<p class="mx-auto text-justify [text-align-last:center]">
+			Masz pomysł na sesję, tworzysz własną markę, a może po prostu czujesz, że
+			to dobry moment, żeby zrobić coś dla siebie? Napisz do mnie. Porozmawiamy
+			o Twoim pomyśle i wspólnie znajdziemy sposób, żeby przełożyć go na
+			zdjęcia.
+		</p>
+		<div class="flex gap-6">
+			<ContactButton
+				href="https://www.instagram.com/anna_visuals_ph"
+				class="bg-linear-to-tr from-[#f58529] via-[#dd2a7b] to-[#515bd4] text-white"
+			>
+				Instagram
+			</ContactButton>
+			<ContactButton
+				href="https://wa.me/48607708244"
+				class="bg-linear-to-tr from-[#128c7e] to-[#25D366] text-white"
+			>
+				WhatsApp
+			</ContactButton>
+		</div>
+	</div>
+</Modal>
