@@ -12,12 +12,16 @@ const heroMobile = await getImage({
 })
 ---
 
-<section id="hero" class="relative grid min-h-svh place-items-center">
+<section
+	id="hero"
+	class="relative grid min-h-svh place-items-center"
+	tabindex="-1"
+>
 	<picture class="absolute inset-0">
 		<source media="(min-width: 768px)" srcset={hero.src} />
 		<img
 			src={heroMobile.src}
-			alt="Anna Visuals Hero"
+			alt=""
 			width={heroMobile.options.width}
 			height={heroMobile.options.height}
 			fetchpriority="high"
