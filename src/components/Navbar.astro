@@ -1,7 +1,5 @@
 ---
-import ContactButton from "./ContactButton.astro"
 import Button from "./ui/Button.astro"
-import Modal from "./ui/Modal.astro"
 
 const items: { href: string; text: string }[] = [
 	{ href: "#gallery", text: "Zdjęcia" },
@@ -16,12 +14,19 @@ const liClass =
 <nav
 	class="group sticky top-0 z-50 w-full bg-white px-8 py-4"
 	data-open="false"
+	aria-label="Nawigacja główna"
 >
 	<div class="mx-auto flex max-w-6xl items-center justify-between">
 		<a href="#hero" class="text-xl font-semibold">
 			Anna Visuals
 		</a>
-		<Button class="sm:hidden" data-nav-open>
+		<Button
+			class="sm:hidden"
+			data-nav-open
+			aria-label="Otwórz menu"
+			aria-expanded="false"
+			aria-controls="nav-menu"
+		>
 			<svg
 				class="size-6"
 				viewBox="0 0 24 24"
@@ -34,9 +39,12 @@ const liClass =
 				<path d="M4 6h16M4 12h16M4 18h16" />
 			</svg>
 		</Button>
-		<ul class="flex gap-12 max-sm:pointer-events-none max-sm:invisible max-sm:fixed max-sm:inset-0 max-sm:flex-col max-sm:items-end max-sm:bg-black/50 max-sm:px-10 max-sm:py-8 max-sm:text-4xl max-sm:font-semibold max-sm:text-white max-sm:opacity-0 max-sm:backdrop-blur-md max-sm:transition-opacity max-sm:duration-500 max-sm:group-data-[open=true]:pointer-events-auto max-sm:group-data-[open=true]:visible max-sm:group-data-[open=true]:opacity-100 sm:justify-center md:gap-20">
+		<ul
+			id="nav-menu"
+			class="flex gap-12 max-sm:pointer-events-none max-sm:invisible max-sm:fixed max-sm:inset-0 max-sm:flex-col max-sm:items-end max-sm:bg-black/50 max-sm:px-10 max-sm:py-8 max-sm:text-4xl max-sm:font-semibold max-sm:text-white max-sm:opacity-0 max-sm:backdrop-blur-md max-sm:transition-opacity max-sm:duration-500 max-sm:group-data-[open=true]:pointer-events-auto max-sm:group-data-[open=true]:visible max-sm:group-data-[open=true]:opacity-100 sm:justify-center md:gap-20"
+		>
 			<li class={`sm:hidden ${liClass}`}>
-				<Button data-nav-close>
+				<Button data-nav-close aria-label="Zamknij menu">
 					<svg
 						class="size-12"
 						viewBox="0 0 24 24"
@@ -70,42 +78,49 @@ const liClass =
 
 <script>
 	const nav = document.querySelector("nav")!
-	const closeMenu = () => {
-		nav.dataset.open = "false"
-		document.body.style.overflow = ""
+	const openButton = nav.querySelector<HTMLButtonElement>("[data-nav-open]")!
+	const closeButton = nav.querySelector<HTMLButtonElement>("[data-nav-close]")!
+
+	const setOpen = (open: boolean, restoreFocus = true) => {
+		nav.dataset.open = String(open)
+		openButton.setAttribute("aria-expanded", String(open))
+		document.body.style.overflow = open ? "hidden" : ""
+		if (open) closeButton.focus()
+		else if (restoreFocus) openButton.focus()
 	}
 
-	nav
-		.querySelector<HTMLButtonElement>("[data-nav-open]")
-		?.addEventListener("click", () => {
-			nav.dataset.open = "true"
-			document.body.style.overflow = "hidden"
-		})
-	nav
-		.querySelector<HTMLButtonElement>("[data-nav-close]")
-		?.addEventListener("click", closeMenu)
+	openButton.addEventListener("click", () => {
+		setOpen(true)
+	})
+
+	closeButton.addEventListener("click", () => {
+		setOpen(false)
+	})
 
 	nav.querySelectorAll("a").forEach(link => {
 		link.addEventListener("click", e => {
 			e.preventDefault()
-			closeMenu()
-			document.querySelector(link.hash)?.scrollIntoView({ behavior: "smooth" })
+			setOpen(false, false)
+			const target = document.querySelector<HTMLElement>(link.hash)
+			target?.scrollIntoView({ behavior: "smooth" })
+			target?.focus({ preventScroll: true })
 		})
 	})
 
 	document.addEventListener("keydown", e => {
-		if (e.key === "Escape") closeMenu()
+		if (nav.dataset.open === "true" && e.key === "Escape") {
+			setOpen(false)
+		}
 	})
 
 	const menu = nav.querySelector("ul")!
 	menu.addEventListener("click", e => {
-		if (e.target === menu) closeMenu()
+		if (e.target === menu) setOpen(false)
 	})
 
-	nav
-		.querySelector<HTMLButtonElement>("[data-modal-open]")
-		?.addEventListener("click", () => {
-			if (nav.dataset.open === "false") return
-			closeMenu()
-		})
+	nav.querySelectorAll<HTMLButtonElement>("[data-modal-open]").forEach(button =>
+		button.addEventListener("click", () => {
+			if (nav.dataset.open === "true") setOpen(false, false)
+		}),
+	)
 </script>

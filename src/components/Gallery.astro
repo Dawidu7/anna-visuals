@@ -17,6 +17,7 @@ const images = Object.values(
 	id="gallery"
 	class="group relative mx-auto max-h-[150dvh] max-w-5xl overflow-hidden px-4 pt-16 transition-[max-height] duration-500 ease-in-out data-[expanded=true]:pb-12"
 	data-expanded="false"
+	tabindex="-1"
 >
 	<ul class="columns-2 space-y-4 md:columns-3">
 		{images.map(({ src }) => (
