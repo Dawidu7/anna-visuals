@@ -1,0 +1,55 @@
+---
+import ContactGroup from "./ContactGroup.astro"
+import Divider from "./ui/Divider.astro"
+---
+
+<section id="contact">
+	<div class="mx-auto max-w-2xl space-y-6 px-4 py-8">
+		<h2 class="text-center text-3xl font-semibold">SKONTAKTUJMY SIĘ</h2>
+		<p class="mx-auto text-justify [text-align-last:center]">
+			Masz pomysł na sesję, tworzysz własną markę, a może po prostu czujesz, że
+			to dobry moment, żeby zrobić coś dla siebie? Napisz do mnie. Porozmawiamy
+			o Twoim pomyśle i wspólnie znajdziemy sposób, żeby przełożyć go na
+			zdjęcia.
+		</p>
+		<Divider />
+		<ContactGroup
+			label="KONTAKT"
+			items={[
+				{
+					href: "tel:+48607708244",
+					variant: "phone",
+					label: "+48 607 708 244",
+				},
+				{
+					href: "https://wa.me/48607708244",
+					variant: "whatsapp",
+					label: "WhatsApp",
+				},
+			]}
+		>
+			<p class="font-semibold">Anna Kłóska</p>
+		</ContactGroup>
+		<Divider />
+		<ContactGroup
+			label="INSTAGRAM"
+			items={[
+				{
+					href: "https://www.instagram.com/anna_visuals_ph",
+					variant: "instagram",
+					label: "anna_visuals_ph",
+				},
+				{
+					href: "https://www.instagram.com/studiosplot_",
+					variant: "instagram",
+					label: "studiosplot_",
+				},
+				{
+					href: "https://www.instagram.com/eventy_fotograficzne_",
+					variant: "instagram",
+					label: "eventy_fotograficzne_",
+				},
+			]}
+		/>
+	</div>
+</section>

@@ -1,0 +1,22 @@
+---
+import ContactButton, { type ContactVariant } from "./ContactButton.astro"
+
+type Props = {
+	label: string
+	items: { href: string; variant: ContactVariant; label: string }[]
+}
+
+const { label, items } = Astro.props
+---
+
+<div class="space-y-1">
+	<h3 class="uppercase">{label}</h3>
+	<slot />
+	<ul class="flex gap-2 max-sm:flex-col">
+		{items.map(({ label, ...props }) => (
+			<li class="flex-1">
+				<ContactButton {...props}>{label}</ContactButton>
+			</li>
+		))}
+	</ul>
+</div>
