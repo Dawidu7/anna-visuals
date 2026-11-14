@@ -5,7 +5,7 @@ import Modal from "./ui/Modal.astro"
 
 const images = Object.values(
 	import.meta.glob<{ default: ImageMetadata }>(
-		"../assets/images/gallery/*.jpg",
+		"~/assets/images/gallery/*.jpg",
 		{ eager: true },
 	),
 ).map(({ default: src }) => ({
@@ -15,7 +15,7 @@ const images = Object.values(
 
 <section
 	id="gallery"
-	class="group relative mx-auto max-h-[150dvh] max-w-5xl overflow-hidden px-4 pt-16 transition-[max-height] duration-500 ease-in-out data-[expanded=true]:pb-12"
+	class="group relative mx-auto max-h-[150dvh] max-w-5xl overflow-hidden px-4 transition-[max-height] duration-500 ease-in-out data-[expanded=true]:pb-12"
 	data-expanded="false"
 	tabindex="-1"
 >

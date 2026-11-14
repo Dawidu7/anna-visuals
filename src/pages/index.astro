@@ -1,9 +1,9 @@
 ---
 import About from "~/components/About.astro"
-import ContactModal from "~/components/ContactModal.astro"
 import Footer from "~/components/Footer.astro"
 import Gallery from "~/components/Gallery.astro"
 import Hero from "~/components/Hero.astro"
+import ModalContact from "~/components/ModalContact.astro"
 import Navbar from "~/components/Navbar.astro"
 import Services from "~/components/Services.astro"
 import Layout from "~/layouts/Layout.astro"
@@ -12,9 +12,9 @@ import Layout from "~/layouts/Layout.astro"
 <Layout title="Anna Visuals">
 	<Navbar />
 	<Hero />
+	<About />
 	<Gallery />
 	<Services />
-	<About />
-	<ContactModal />
+	<ModalContact />
 	<Footer />
 </Layout>
