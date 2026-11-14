@@ -1,1 +1,7 @@
 @import "tailwindcss";
+
+@media (width < 40rem) {
+	html:has(nav[data-menu-open="true"]) {
+		overflow: hidden;
+	}
+}

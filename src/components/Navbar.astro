@@ -8,6 +8,9 @@ const dropdownItems: { href: string; label: string }[] = [
 	{ href: "#couples", label: "Dla Par" },
 	{ href: "#artistic", label: "Fotografia Artystyczna" },
 ]
+
+const liClass =
+	"max-sm:delay-[calc(var(--i)*80ms)] max-sm:transition-[translate,opacity] max-sm:duration-400 max-sm:starting:translate-x-8 max-sm:starting:opacity-0 motion-reduce:transition-none"
 ---
 
 <nav
@@ -31,8 +34,8 @@ const dropdownItems: { href: string; label: string }[] = [
 				<path d="M4 6h16M4 12h16M4 18h16" />
 			</svg>
 		</Button>
-		<ul class="hidden gap-8 group-data-[menu-open=true]:flex max-sm:fixed max-sm:inset-0 max-sm:flex-col max-sm:items-end max-sm:gap-12 max-sm:bg-black/50 max-sm:px-12 max-sm:py-10 max-sm:text-5xl max-sm:font-semibold max-sm:text-white max-sm:backdrop-blur-md sm:flex">
-			<li class="sm:hidden">
+		<ul class="hidden gap-8 group-data-[menu-open=true]:flex max-sm:fixed max-sm:inset-0 max-sm:flex-col max-sm:items-end max-sm:gap-12 max-sm:overflow-y-auto max-sm:overscroll-contain max-sm:bg-black/50 max-sm:px-12 max-sm:py-10 max-sm:text-5xl max-sm:font-semibold max-sm:text-white max-sm:backdrop-blur-md sm:flex">
+			<li class={`sm:hidden ${liClass}`} style="--i: 0">
 				<Button data-menu-close>
 					<svg
 						class="size-12"
@@ -47,13 +50,13 @@ const dropdownItems: { href: string; label: string }[] = [
 					</svg>
 				</Button>
 			</li>
-			<li>
+			<li class={liClass} style="--i: 1">
 				<a href="#about">O mnie</a>
 			</li>
-			<li>
+			<li class={liClass} style="--i: 2">
 				<a href="#gallery">Portfolio</a>
 			</li>
-			<li class="relative">
+			<li class={`relative ${liClass}`} style="--i: 3">
 				<Button class="ml-auto flex items-center gap-2" data-dropdown-trigger>
 					Oferta
 					<svg
@@ -89,7 +92,7 @@ const dropdownItems: { href: string; label: string }[] = [
 					</div>
 				</div>
 			</li>
-			<li>
+			<li class={liClass} style="--i: 4">
 				<a href="#contact">Kontakt</a>
 			</li>
 		</ul>
