@@ -13,12 +13,13 @@ const dropdownItems: { href: string; label: string }[] = [
 <nav
 	class="group sticky top-0 z-50 bg-white px-4 py-4"
 	data-dropdown-open="false"
+	data-menu-open="false"
 >
 	<div class="mx-auto flex max-w-5xl items-center justify-between">
 		<a href="#hero" class="text-lg font-semibold">
 			Anna Visuals
 		</a>
-		<Button class="sm:hidden">
+		<Button class="sm:hidden" data-menu-trigger>
 			<svg
 				class="size-6"
 				viewBox="0 0 24 24"
@@ -30,7 +31,22 @@ const dropdownItems: { href: string; label: string }[] = [
 				<path d="M4 6h16M4 12h16M4 18h16" />
 			</svg>
 		</Button>
-		<ul class="flex gap-8">
+		<ul class="hidden gap-8 group-data-[menu-open=true]:flex max-sm:fixed max-sm:inset-0 max-sm:flex-col max-sm:items-end max-sm:gap-12 max-sm:bg-black/50 max-sm:px-12 max-sm:py-10 max-sm:text-5xl max-sm:font-semibold max-sm:text-white max-sm:backdrop-blur-md sm:flex">
+			<li class="sm:hidden">
+				<Button data-menu-close>
+					<svg
+						class="size-12"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						aria-hidden="true"
+					>
+						<path d="M6 6l12 12M18 6L6 18" />
+					</svg>
+				</Button>
+			</li>
 			<li>
 				<a href="#about">O mnie</a>
 			</li>
@@ -38,10 +54,10 @@ const dropdownItems: { href: string; label: string }[] = [
 				<a href="#gallery">Portfolio</a>
 			</li>
 			<li class="relative">
-				<Button class="flex items-center gap-2" data-dropdown-trigger>
+				<Button class="ml-auto flex items-center gap-2" data-dropdown-trigger>
 					Oferta
 					<svg
-						class="size-4 transition-transform group-data-[dropdown-open=true]:rotate-180"
+						class="size-12 transition-transform group-data-[dropdown-open=true]:rotate-180 sm:size-4"
 						viewBox="0 0 24 24"
 						fill="none"
 						stroke="currentColor"
@@ -53,9 +69,12 @@ const dropdownItems: { href: string; label: string }[] = [
 						<path d="m6 9 6 6 6-6" />
 					</svg>
 				</Button>
-				<div class="invisible absolute right-0 mt-2 grid w-max grid-rows-[0fr] rounded-md shadow-lg transition-[grid-template-rows,visibility] duration-300 ease-in-out group-data-[dropdown-open=true]:visible group-data-[dropdown-open=true]:grid-rows-[1fr]">
-					<div class="overflow-hidden rounded-md">
-						<ul class="bg-white text-nowrap" data-dropdown-menu>
+				<div class="invisible right-0 mt-2 grid w-max grid-rows-[0fr] transition-[grid-template-rows,visibility] duration-300 ease-in-out group-data-[dropdown-open=true]:visible group-data-[dropdown-open=true]:grid-rows-[1fr] sm:absolute sm:rounded-md sm:shadow-lg">
+					<div class="overflow-hidden sm:rounded-md">
+						<ul
+							class="text-nowrap max-sm:text-right max-sm:text-2xl sm:bg-white"
+							data-dropdown-menu
+						>
 							{dropdownItems.map(({ href, label }) => (
 								<li>
 									<a
@@ -80,20 +99,32 @@ const dropdownItems: { href: string; label: string }[] = [
 <script>
 	const nav = document.querySelector("nav")!
 
-	// Dropdown Trigger
-	const dropdownTrigger = nav.querySelector<HTMLButtonElement>(
-		"[data-dropdown-trigger]",
-	)!
-	dropdownTrigger.addEventListener("click", () => {
-		nav.dataset.dropdownOpen = String(nav.dataset.dropdownOpen === "false")
+	nav.addEventListener("click", e => {
+		const target = e.target as HTMLElement
+
+		if (target.closest("[data-dropdown-trigger]")) {
+			nav.dataset.dropdownOpen = String(nav.dataset.dropdownOpen === "false")
+		}
+
+		if (target.closest("[data-menu-trigger]")) {
+			nav.dataset.menuOpen = "true"
+		}
+
+		if (target.closest("[data-menu-close], a")) {
+			nav.dataset.menuOpen = "false"
+			nav.dataset.dropdownOpen = "false"
+		}
 	})
 
-	// Dropdown Menu
-	nav
-		.querySelector<HTMLUListElement>("[data-dropdown-menu]")!
-		.addEventListener("click", e => {
-			if ((e.target as HTMLElement).closest("a")) {
-				nav.dataset.dropdownOpen = "false"
-			}
-		})
+	document.addEventListener("click", e => {
+		const target = e.target as HTMLElement
+
+		if (
+			nav.dataset.dropdownOpen === "true" &&
+			!target.closest("[data-dropdown-menu]") &&
+			!target.closest("[data-dropdown-trigger]")
+		) {
+			nav.dataset.dropdownOpen = "false"
+		}
+	})
 </script>
