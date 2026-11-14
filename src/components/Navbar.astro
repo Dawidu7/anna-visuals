@@ -1,32 +1,24 @@
 ---
 import Button from "./ui/Button.astro"
 
-const items: { href: string; text: string }[] = [
-	{ href: "#gallery", text: "Zdjęcia" },
-	{ href: "#services", text: "Serwisy" },
-	{ href: "#about", text: "O mnie" },
+const dropdownItems: { href: string; label: string }[] = [
+	{ href: "#fashion", label: "Fotografia Modowa" },
+	{ href: "#portrait", label: "Portret & Sensual" },
+	{ href: "#branding", label: "Fotografia Wizerunkowa" },
+	{ href: "#couples", label: "Dla Par" },
+	{ href: "#artistic", label: "Fotografia Artystyczna" },
 ]
-
-const liClass =
-	"w-fit max-sm:opacity-0 max-sm:translate-y-4 max-sm:transition-all max-sm:duration-500 max-sm:ease-out max-sm:group-data-[open=true]:translate-y-0 max-sm:group-data-[open=true]:opacity-100"
 ---
 
 <nav
-	class="group sticky top-0 z-50 w-full bg-white px-8 py-4"
-	data-open="false"
-	aria-label="Nawigacja główna"
+	class="group sticky top-0 z-50 bg-white px-4 py-4"
+	data-dropdown-open="false"
 >
-	<div class="mx-auto flex max-w-6xl items-center justify-between">
-		<a href="#hero" class="text-xl font-semibold">
+	<div class="mx-auto flex max-w-5xl items-center justify-between">
+		<a href="#hero" class="text-lg font-semibold">
 			Anna Visuals
 		</a>
-		<Button
-			class="sm:hidden"
-			data-nav-open
-			aria-label="Otwórz menu"
-			aria-expanded="false"
-			aria-controls="nav-menu"
-		>
+		<Button class="sm:hidden">
 			<svg
 				class="size-6"
 				viewBox="0 0 24 24"
@@ -34,93 +26,74 @@ const liClass =
 				stroke="currentColor"
 				stroke-width="2"
 				stroke-linecap="round"
-				aria-hidden="true"
 			>
 				<path d="M4 6h16M4 12h16M4 18h16" />
 			</svg>
 		</Button>
-		<ul
-			id="nav-menu"
-			class="flex gap-12 max-sm:pointer-events-none max-sm:invisible max-sm:fixed max-sm:inset-0 max-sm:flex-col max-sm:items-end max-sm:bg-black/50 max-sm:px-10 max-sm:py-8 max-sm:text-4xl max-sm:font-semibold max-sm:text-white max-sm:opacity-0 max-sm:backdrop-blur-md max-sm:transition-opacity max-sm:duration-500 max-sm:group-data-[open=true]:pointer-events-auto max-sm:group-data-[open=true]:visible max-sm:group-data-[open=true]:opacity-100 sm:justify-center md:gap-20"
-		>
-			<li class={`sm:hidden ${liClass}`}>
-				<Button data-nav-close aria-label="Zamknij menu">
+		<ul class="flex gap-8">
+			<li>
+				<a href="#about">O mnie</a>
+			</li>
+			<li>
+				<a href="#gallery">Portfolio</a>
+			</li>
+			<li class="relative">
+				<Button class="flex items-center gap-2" data-dropdown-trigger>
+					Oferta
 					<svg
-						class="size-12"
+						class="size-4 transition-transform group-data-[dropdown-open=true]:rotate-180"
 						viewBox="0 0 24 24"
 						fill="none"
 						stroke="currentColor"
-						stroke-width="2"
+						stroke-width="1.7"
 						stroke-linecap="round"
+						stroke-linejoin="round"
 						aria-hidden="true"
 					>
-						<path d="M6 6l12 12M18 6L6 18" />
+						<path d="m6 9 6 6 6-6" />
 					</svg>
 				</Button>
+				<div class="invisible absolute right-0 mt-2 grid w-max grid-rows-[0fr] rounded-md shadow-lg transition-[grid-template-rows,visibility] duration-300 ease-in-out group-data-[dropdown-open=true]:visible group-data-[dropdown-open=true]:grid-rows-[1fr]">
+					<div class="overflow-hidden rounded-md">
+						<ul class="bg-white text-nowrap" data-dropdown-menu>
+							{dropdownItems.map(({ href, label }) => (
+								<li>
+									<a
+										href={href}
+										class="block rounded px-3 py-1.5 hover:bg-black/10"
+									>
+										{label}
+									</a>
+								</li>
+							))}
+						</ul>
+					</div>
+				</div>
 			</li>
-			{items.map(({ href, text }, i) => (
-				<li class={liClass} style={`transition-delay: ${i * 100 + 100}ms`}>
-					<a href={href}>{text}</a>
-				</li>
-			))}
-			<li class={`sm:hidden ${liClass}`} style="transition-delay: 400ms">
-				<Button data-modal-open="contact-modal">Kontakt</Button>
+			<li>
+				<a href="#contact">Kontakt</a>
 			</li>
 		</ul>
-		<Button
-			class="justify-self-end rounded-md bg-black px-4 py-2 text-white max-sm:hidden"
-			data-modal-open="contact-modal"
-		>
-			Kontakt
-		</Button>
 	</div>
 </nav>
 
 <script>
 	const nav = document.querySelector("nav")!
-	const openButton = nav.querySelector<HTMLButtonElement>("[data-nav-open]")!
-	const closeButton = nav.querySelector<HTMLButtonElement>("[data-nav-close]")!
 
-	const setOpen = (open: boolean, restoreFocus = true) => {
-		nav.dataset.open = String(open)
-		openButton.setAttribute("aria-expanded", String(open))
-		document.body.style.overflow = open ? "hidden" : ""
-		if (open) closeButton.focus()
-		else if (restoreFocus) openButton.focus()
-	}
-
-	openButton.addEventListener("click", () => {
-		setOpen(true)
+	// Dropdown Trigger
+	const dropdownTrigger = nav.querySelector<HTMLButtonElement>(
+		"[data-dropdown-trigger]",
+	)!
+	dropdownTrigger.addEventListener("click", () => {
+		nav.dataset.dropdownOpen = String(nav.dataset.dropdownOpen === "false")
 	})
 
-	closeButton.addEventListener("click", () => {
-		setOpen(false)
-	})
-
-	nav.querySelectorAll("a").forEach(link => {
-		link.addEventListener("click", e => {
-			e.preventDefault()
-			setOpen(false, false)
-			const target = document.querySelector<HTMLElement>(link.hash)
-			target?.scrollIntoView({ behavior: "smooth" })
-			target?.focus({ preventScroll: true })
+	// Dropdown Menu
+	nav
+		.querySelector<HTMLUListElement>("[data-dropdown-menu]")!
+		.addEventListener("click", e => {
+			if ((e.target as HTMLElement).closest("a")) {
+				nav.dataset.dropdownOpen = "false"
+			}
 		})
-	})
-
-	document.addEventListener("keydown", e => {
-		if (nav.dataset.open === "true" && e.key === "Escape") {
-			setOpen(false)
-		}
-	})
-
-	const menu = nav.querySelector("ul")!
-	menu.addEventListener("click", e => {
-		if (e.target === menu) setOpen(false)
-	})
-
-	nav.querySelectorAll<HTMLButtonElement>("[data-modal-open]").forEach(button =>
-		button.addEventListener("click", () => {
-			if (nav.dataset.open === "true") setOpen(false, false)
-		}),
-	)
 </script>
