@@ -1,15 +1,6 @@
 ---
-import { getImage } from "astro:assets"
-import heroMobileImage from "~/assets/images/hero-mobile.webp"
+import { Image } from "astro:assets"
 import heroImage from "~/assets/images/hero.webp"
-import Button from "./ui/Button.astro"
-
-const hero = await getImage({ src: heroImage, format: "webp", width: 2400 })
-const heroMobile = await getImage({
-	src: heroMobileImage,
-	format: "webp",
-	width: 1200,
-})
 ---
 
 <header
@@ -17,26 +8,14 @@ const heroMobile = await getImage({
 	class="relative grid min-h-svh place-items-center"
 	tabindex="-1"
 >
-	<picture class="absolute inset-0">
-		<source media="(min-width: 768px)" srcset={hero.src} />
-		<img
-			src={heroMobile.src}
-			alt=""
-			width={heroMobile.options.width}
-			height={heroMobile.options.height}
-			fetchpriority="high"
-			class="size-full object-cover"
-		/>
-	</picture>
-	<div class="relative grid place-items-center gap-4">
-		<h1 class="px-4 text-5xl font-semibold text-white md:text-7xl">
-			Anna Visuals
-		</h1>
-		<Button
-			class="rounded-md bg-black px-4 py-2 text-white shadow-md shadow-black/60"
-			data-modal-open="contact-modal"
-		>
-			Skontaktuj się
-		</Button>
-	</div>
+	<Image
+		src={heroImage}
+		alt=""
+		loading="eager"
+		fetchpriority="high"
+		class="absolute inset-0 size-full object-cover"
+	/>
+	<h1 class="relative px-4 text-5xl font-semibold text-white drop-shadow-[0_3px_8px_rgba(0,0,0,0.55)] md:text-7xl">
+		Anna Visuals
+	</h1>
 </header>
