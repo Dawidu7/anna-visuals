@@ -10,7 +10,8 @@
 		"build": "astro build",
 		"preview": "astro preview",
 		"astro": "astro",
-		"create-collection": "bun scripts/create-collection.ts"
+		"image:generate-collection": "bun scripts/generate-collection.ts",
+		"image:optimize": "bun scripts/optimize-image.ts"
 	},
 	"dependencies": {
 		"@tailwindcss/vite": "^4.3.3",

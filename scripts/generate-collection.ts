@@ -1,15 +1,13 @@
 import { createHash } from "node:crypto"
 import fs from "node:fs/promises"
-import { extname, join } from "node:path"
-import sharp from "sharp"
+import { join } from "node:path"
+import { isImage, optimize } from "./optimize-image"
 
 type ImageMetadata = {
 	name: string
 	sources: string[]
 	tags: Set<string>
 }
-
-const IMAGE_EXT = new Set([".jpg", ".tif"])
 
 async function scan(dirname: string) {
 	const root = join(process.cwd(), dirname)
@@ -28,8 +26,7 @@ async function scan(dirname: string) {
 		})
 
 		for (const file of files.sort((a, b) => a.name.localeCompare(b.name))) {
-			if (!file.isFile() || !IMAGE_EXT.has(extname(file.name).toLowerCase()))
-				continue
+			if (!file.isFile() || !isImage(file.name)) continue
 
 			const source = join(dirPath, file.name)
 
@@ -64,11 +61,7 @@ async function write(images: Map<string, ImageMetadata>) {
 		const id = hash.slice(0, 12)
 		const filename = `${id}.webp`
 
-		await sharp(meta.sources[0])
-			.rotate()
-			.resize({ width: 2400, withoutEnlargement: true })
-			.webp({ quality: 82 })
-			.toFile(join(imagesDir, filename))
+		await optimize(meta.sources[0], join(imagesDir, filename), 2400, 82)
 
 		entries.push({
 			id,
