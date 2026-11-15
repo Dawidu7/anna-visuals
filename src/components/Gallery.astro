@@ -5,7 +5,7 @@ import Button from "./ui/Button.astro"
 import Modal from "./ui/Modal.astro"
 
 const _images = await getCollection("images")
-const images = _images.map(({ data }) => data)
+const images = await Promise.all(_images.map(async ({ data }) => data))
 ---
 
 <section
@@ -16,13 +16,19 @@ const images = _images.map(({ data }) => data)
 >
 	<ul class="columns-2 space-y-4 md:columns-3">
 		{images.map(image => (
-			<li class="overflow-hidden">
+			<li
+				class="overflow-hidden bg-cover"
+				style={`background-image: url(${image.placeholder})`}
+			>
 				<Button data-modal-open="image-modal">
 					<Image
 						src={image.src}
 						alt={image.alt}
+						widths={[320, 480, 640, 800, 1024]}
+						sizes="(min-width: 768px) 33vw, 50vw"
 						loading="lazy"
-						class="transition-[scale] hover:scale-105"
+						class="opacity-0 transition-[scale,opacity] duration-500 hover:scale-105 data-[loaded=true]:opacity-100"
+						data-loaded="false"
 					/>
 				</Button>
 			</li>
@@ -57,6 +63,12 @@ const images = _images.map(({ data }) => data)
 		galleryCollapseButton.innerHTML = isExpanded
 			? "Mniej &#x2191;"
 			: "Więcej &#x2193;"
+	})
+
+	gallery.querySelectorAll("img").forEach(img => {
+		const show = () => (img.dataset.loaded = "true")
+		if (img.complete) show()
+		else img.addEventListener("load", show, { once: true })
 	})
 
 	const modalImg = document.querySelector<HTMLImageElement>("#image-modal img")!

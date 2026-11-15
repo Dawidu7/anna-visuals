@@ -11,6 +11,7 @@ export const images = defineCollection({
 			hash: z.string(),
 			src: image(),
 			alt: z.string().default(""),
+			placeholder: z.string(),
 			tags: z.array(z.string()),
 		}),
 })

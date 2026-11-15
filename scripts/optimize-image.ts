@@ -15,11 +15,20 @@ export async function optimize(
 	width: number,
 	quality: number,
 ) {
+	const image = sharp(src).rotate()
+
 	await sharp(src)
 		.rotate()
 		.resize({ width, withoutEnlargement: true })
 		.webp({ quality })
 		.toFile(out)
+
+	return image
+		.clone()
+		.resize({ width: 32 })
+		.blur(1)
+		.webp({ quality: 50 })
+		.toBuffer()
 }
 
 async function getFiles(target: string) {

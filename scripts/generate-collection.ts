@@ -56,21 +56,32 @@ async function write(images: Map<string, ImageMetadata>) {
 	await fs.mkdir(imagesDir, { recursive: true })
 
 	const entries = []
+	let current = 0
 
 	for (const [hash, meta] of images) {
 		const id = hash.slice(0, 12)
 		const filename = `${id}.webp`
 
-		await optimize(meta.sources[0], join(imagesDir, filename), 2400, 82)
+		current++
+		process.stdout.write(`\r\x1b[2K[${current}/${images.size}] ${meta.name}`)
+
+		const placeholder = await optimize(
+			meta.sources[0],
+			join(imagesDir, filename),
+			2400,
+			82,
+		)
 
 		entries.push({
 			id,
 			name: meta.name,
 			hash,
 			src: `./assets/images/collection/${filename}`,
+			placeholder: `data:image/webp;base64,${placeholder.toString("base64")}`,
 			tags: [...meta.tags],
 		})
 	}
+	process.stdout.write("\x1b[2K")
 
 	if (new Set(entries.map(e => e.id)).size !== entries.length)
 		throw new Error("Hash collision")
