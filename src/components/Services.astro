@@ -1,10 +1,10 @@
 ---
+import { Image } from "astro:assets"
 import artisticImage from "~/assets/images/artistic.jpg"
 import brandingImage from "~/assets/images/branding.jpg"
 import fashionImage from "~/assets/images/fashion.jpg"
 import portraitImage from "~/assets/images/portrait.jpg"
 import { type Service } from "~/lib/types"
-import ServiceItem from "./ServiceItem.astro"
 
 export const services: Service[] = [
 	{
@@ -47,8 +47,25 @@ export const services: Service[] = [
 
 <section tabindex="-1">
 	<ul>
-		{services.map(service => (
-			<ServiceItem {...service} />
+		{services.map(s => (
+			<li class="group px-6 py-8 odd:bg-[#eeeeee] even:bg-[#dddddd]" id={s.id}>
+				<div class="mx-auto max-w-4xl items-center gap-20 space-y-4 group-even:flex-row-reverse sm:flex">
+					<div class="sm:w-1/2">
+						{s.image ? (
+							<Image src={s.image} alt="" />
+						) : (
+							<div class="aspect-3/4 w-full bg-black/20" />
+						)}
+					</div>
+					<div class="space-y-6 text-center sm:w-1/2 sm:text-left">
+						<div class="space-y-2">
+							<h3 class="text-2xl font-semibold uppercase">{s.title}</h3>
+							<h5 class="text-xs">{s.subtitle}</h5>
+						</div>
+						<p>{s.text}</p>
+					</div>
+				</div>
+			</li>
 		))}
 	</ul>
 </section>

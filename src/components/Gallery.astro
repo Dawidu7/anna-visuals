@@ -1,16 +1,11 @@
 ---
 import { Image } from "astro:assets"
+import { getCollection } from "astro:content"
 import Button from "./ui/Button.astro"
 import Modal from "./ui/Modal.astro"
 
-const images = Object.values(
-	import.meta.glob<{ default: ImageMetadata }>(
-		"~/assets/images/gallery/*.jpg",
-		{ eager: true },
-	),
-).map(({ default: src }) => ({
-	src,
-}))
+const _images = await getCollection("images")
+const images = _images.map(({ data }) => data)
 ---
 
 <section
@@ -20,12 +15,12 @@ const images = Object.values(
 	tabindex="-1"
 >
 	<ul class="columns-2 space-y-4 md:columns-3">
-		{images.map(({ src }) => (
+		{images.map(image => (
 			<li class="overflow-hidden">
 				<Button data-modal-open="image-modal">
 					<Image
-						src={src}
-						alt=""
+						src={image.src}
+						alt={image.alt}
 						loading="lazy"
 						class="transition-[scale] hover:scale-105"
 					/>
