@@ -1,33 +1,38 @@
 ---
-import { Image } from "astro:assets"
+import { getImage, Image } from "astro:assets"
 import { getCollection } from "astro:content"
 import Button from "./ui/Button.astro"
 
 const _images = await getCollection("images")
-const images = _images.map(({ data }) => data)
+const images = await Promise.all(
+	_images.map(async ({ data }) => ({
+		...data,
+		full: (await getImage({ src: data.src, format: "webp" })).src,
+	})),
+)
 ---
 
 <section
+	data-expanded="false"
 	id="gallery"
 	class="group relative mx-auto max-h-[150dvh] max-w-5xl overflow-hidden px-4 pb-12 transition-[max-height] duration-500 ease-in-out data-[expanded=true]:max-h-(--height)"
-	data-expanded="false"
 	tabindex="-1"
 >
 	<ul class="columns-2 space-y-4 md:columns-3">
-		{images.map(image => (
+		{images.map(img => (
 			<li
 				class="overflow-hidden bg-cover"
-				style={`background-image: url(${image.placeholder})`}
+				style={`background-image: url(${img.placeholder})`}
 			>
-				<Button data-modal-open="image-modal">
+				<Button data-img-btn data-img-src={img.full} data-img-alt={img.alt}>
 					<Image
-						src={image.src}
-						alt={image.alt}
+						data-loaded="false"
+						src={img.src}
+						alt={img.alt}
 						widths={[320, 640, 1024]}
 						sizes="(min-width: 768px) 33vw, 50vw"
 						loading="lazy"
 						class="opacity-0 transition-[scale,opacity] duration-500 hover:scale-105 data-[loaded=true]:opacity-100"
-						data-loaded="false"
 					/>
 				</Button>
 			</li>
@@ -35,8 +40,8 @@ const images = _images.map(({ data }) => data)
 	</ul>
 	<div class="pointer-events-none absolute inset-x-0 bottom-0 grid h-48 place-items-center bg-linear-to-t from-white to-transparent group-data-[expanded=true]:opacity-0" />
 	<Button
-		class="absolute inset-x-0 bottom-3 mx-auto flex items-center justify-center gap-2"
 		data-collapse-button
+		class="absolute inset-x-0 bottom-3 mx-auto flex items-center justify-center gap-2"
 	>
 		<span class="group-data-[expanded=true]:hidden">Więcej</span>
 		<span class="group-data-[expanded=false]:hidden">Mniej</span>
@@ -55,13 +60,44 @@ const images = _images.map(({ data }) => data)
 	</Button>
 </section>
 
+<dialog class="m-auto rounded-lg shadow-lg transition-[opacity,scale,display,overlay] transition-discrete duration-300 ease-in-out backdrop:bg-black/50 backdrop:backdrop-blur-xs open:scale-100 open:opacity-100 starting:open:scale-90 starting:open:opacity-0">
+	<img
+		data-modal-img
+		src=""
+		alt=""
+		class="max-h-[90dvh] max-w-[90dvh] object-contain"
+	/>
+	<Button class="absolute top-4 right-4" data-modal-close>
+		<svg
+			class="size-10 text-white"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			aria-hidden="true"
+		>
+			<path d="M6 6l12 12M18 6L6 18" />
+		</svg>
+	</Button>
+</dialog>
+
 <script>
 	const gallery = document.querySelector<HTMLElement>("#gallery")!
-
 	const updateHeight = () =>
 		gallery.style.setProperty("--height", `${gallery.scrollHeight}px`)
 	new ResizeObserver(updateHeight).observe(gallery.querySelector("ul")!)
 	updateHeight()
+
+	const modal = document.querySelector("dialog")!
+	const modalImg = modal.querySelector<HTMLImageElement>("[data-modal-img]")!
+	modal.addEventListener("close", () => {
+		modalImg.src = ""
+		modalImg.alt = ""
+	})
+	modal
+		.querySelector<HTMLButtonElement>("[data-modal-close]")!
+		.addEventListener("click", () => modal.close())
 
 	gallery.querySelectorAll("img").forEach(img => {
 		const show = () => (img.dataset.loaded = "true")
@@ -74,5 +110,18 @@ const images = _images.map(({ data }) => data)
 
 		if (target.closest("[data-collapse-button]"))
 			gallery.dataset.expanded = String(gallery.dataset.expanded !== "true")
+
+		const imgBtn = target.closest<HTMLButtonElement>("[data-img-btn]")
+		if (imgBtn) {
+			modalImg.src = imgBtn.dataset.imgSrc!
+			modalImg.alt = imgBtn.dataset.imgAlt!
+
+			modal.showModal()
+		}
+	})
+
+	document.addEventListener("click", e => {
+		const target = e.target as HTMLElement
+		if (target instanceof HTMLDialogElement && target.open) target.close()
 	})
 </script>
