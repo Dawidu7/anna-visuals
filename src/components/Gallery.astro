@@ -20,10 +20,7 @@ const images = await Promise.all(
 >
 	<ul class="columns-2 space-y-4 md:columns-3">
 		{images.map(img => (
-			<li
-				class="overflow-hidden bg-cover"
-				style={`background-image: url(${img.placeholder})`}
-			>
+			<li class="overflow-hidden bg-cover" style={`background-image: url(${img.placeholder})`}>
 				<Button data-img-btn data-img-src={img.full} data-img-alt={img.alt}>
 					<Image
 						data-loaded="false"
@@ -61,12 +58,7 @@ const images = await Promise.all(
 </section>
 
 <dialog class="m-auto rounded-lg shadow-lg transition-[opacity,scale,display,overlay] transition-discrete duration-300 ease-in-out backdrop:bg-black/50 backdrop:backdrop-blur-xs open:scale-100 open:opacity-100 starting:open:scale-90 starting:open:opacity-0">
-	<img
-		data-modal-img
-		src=""
-		alt=""
-		class="max-h-[90dvh] max-w-[90dvh] object-contain"
-	/>
+	<img data-modal-img src="" alt="" class="max-h-[90dvh] max-w-[90dvh] object-contain" />
 	<Button class="absolute top-4 right-4" data-modal-close>
 		<svg
 			class="size-10 text-white"
@@ -84,8 +76,7 @@ const images = await Promise.all(
 
 <script>
 	const gallery = document.querySelector<HTMLElement>("#gallery")!
-	const updateHeight = () =>
-		gallery.style.setProperty("--height", `${gallery.scrollHeight}px`)
+	const updateHeight = () => gallery.style.setProperty("--height", `${gallery.scrollHeight}px`)
 	new ResizeObserver(updateHeight).observe(gallery.querySelector("ul")!)
 	updateHeight()
 

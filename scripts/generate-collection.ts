@@ -65,12 +65,7 @@ async function write(images: Map<string, ImageMetadata>) {
 		current++
 		process.stdout.write(`\r\x1b[2K[${current}/${images.size}] ${meta.name}`)
 
-		const placeholder = await optimize(
-			meta.sources[0],
-			join(imagesDir, filename),
-			2400,
-			82,
-		)
+		const placeholder = await optimize(meta.sources[0], join(imagesDir, filename), 2400, 82)
 
 		entries.push({
 			id,
@@ -83,8 +78,7 @@ async function write(images: Map<string, ImageMetadata>) {
 	}
 	process.stdout.write("\x1b[2K")
 
-	if (new Set(entries.map(e => e.id)).size !== entries.length)
-		throw new Error("Hash collision")
+	if (new Set(entries.map(e => e.id)).size !== entries.length) throw new Error("Hash collision")
 
 	entries.sort((a, b) => a.name.localeCompare(b.name))
 

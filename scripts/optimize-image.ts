@@ -6,15 +6,9 @@ import sharp from "sharp"
 
 const EXT = new Set([".jpg", ".tif"])
 
-export const isImage = (name: string) =>
-	EXT.has(path.extname(name).toLowerCase())
+export const isImage = (name: string) => EXT.has(path.extname(name).toLowerCase())
 
-export async function optimize(
-	src: string,
-	out: string,
-	width: number,
-	quality: number,
-) {
+export async function optimize(src: string, out: string, width: number, quality: number) {
 	const image = sharp(src).rotate()
 
 	await sharp(src)
@@ -23,12 +17,7 @@ export async function optimize(
 		.webp({ quality })
 		.toFile(out)
 
-	return image
-		.clone()
-		.resize({ width: 32 })
-		.blur(1)
-		.webp({ quality: 50 })
-		.toBuffer()
+	return image.clone().resize({ width: 32 }).blur(1).webp({ quality: 50 }).toBuffer()
 }
 
 async function getFiles(target: string) {
@@ -58,10 +47,7 @@ async function main() {
 
 	for (const target of positionals) {
 		for (const file of await getFiles(target)) {
-			const out = path.join(
-				values.out ?? path.dirname(file),
-				`${path.parse(file).name}.webp`,
-			)
+			const out = path.join(values.out ?? path.dirname(file), `${path.parse(file).name}.webp`)
 			await optimize(file, out, width, quality)
 		}
 	}

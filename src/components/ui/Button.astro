@@ -7,10 +7,6 @@ type Props = HTMLAttributes<"button">
 const { type, class: className, ...props } = Astro.props
 ---
 
-<button
-	type={type ?? "button"}
-	class={cn("cursor-pointer", className)}
-	{...props}
->
+<button type={type ?? "button"} class={cn("cursor-pointer", className)} {...props}>
 	<slot />
 </button>

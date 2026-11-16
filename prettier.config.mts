@@ -7,6 +7,7 @@ type Config = PrettierConfig & SortImportsConfig & AstroConfig & TailwindConfig
 
 export default {
 	arrowParens: "avoid",
+	printWidth: 100,
 	semi: false,
 	singleQuote: false,
 	useTabs: true,
