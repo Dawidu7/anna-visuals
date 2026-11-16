@@ -2,15 +2,14 @@
 import { Image } from "astro:assets"
 import { getCollection } from "astro:content"
 import Button from "./ui/Button.astro"
-import Modal from "./ui/Modal.astro"
 
 const _images = await getCollection("images")
-const images = await Promise.all(_images.map(async ({ data }) => data))
+const images = _images.map(({ data }) => data)
 ---
 
 <section
 	id="gallery"
-	class="group relative mx-auto max-h-[150dvh] max-w-5xl overflow-hidden px-4 transition-[max-height] duration-500 ease-in-out data-[expanded=true]:pb-12"
+	class="group relative mx-auto max-h-[150dvh] max-w-5xl overflow-hidden px-4 pb-12 transition-[max-height] duration-500 ease-in-out data-[expanded=true]:max-h-(--height)"
 	data-expanded="false"
 	tabindex="-1"
 >
@@ -24,7 +23,7 @@ const images = await Promise.all(_images.map(async ({ data }) => data))
 					<Image
 						src={image.src}
 						alt={image.alt}
-						widths={[320, 480, 640, 800, 1024]}
+						widths={[320, 640, 1024]}
 						sizes="(min-width: 768px) 33vw, 50vw"
 						loading="lazy"
 						class="opacity-0 transition-[scale,opacity] duration-500 hover:scale-105 data-[loaded=true]:opacity-100"
@@ -35,35 +34,34 @@ const images = await Promise.all(_images.map(async ({ data }) => data))
 		))}
 	</ul>
 	<div class="pointer-events-none absolute inset-x-0 bottom-0 grid h-48 place-items-center bg-linear-to-t from-white to-transparent group-data-[expanded=true]:opacity-0" />
-	<Button class="absolute inset-x-0 bottom-3" data-collapse-button>
-		Więcej &#x2193;
+	<Button
+		class="absolute inset-x-0 bottom-3 mx-auto flex items-center justify-center gap-2"
+		data-collapse-button
+	>
+		<span class="group-data-[expanded=true]:hidden">Więcej</span>
+		<span class="group-data-[expanded=false]:hidden">Mniej</span>
+		<svg
+			class="size-6 group-data-[expanded=true]:rotate-180"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="1.7"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			aria-hidden="true"
+		>
+			<path d="m6 9 6 6 6-6" />
+		</svg>
 	</Button>
 </section>
 
-<Modal id="image-modal" variant="full">
-	<img src="" alt="" class="max-h-[90dvh] max-w-[90dvw] object-contain" />
-</Modal>
-
 <script>
 	const gallery = document.querySelector<HTMLElement>("#gallery")!
-	const galleryCollapseButton = gallery.querySelector<HTMLButtonElement>(
-		"[data-collapse-button]",
-	)!
 
-	const galleryCollapsedHeight = getComputedStyle(gallery).maxHeight
-
-	galleryCollapseButton.addEventListener("click", () => {
-		const isExpanded = !(gallery.dataset.expanded === "true")
-		gallery.dataset.expanded = String(isExpanded)
-
-		gallery.style.maxHeight = isExpanded
-			? `${gallery.scrollHeight}px`
-			: galleryCollapsedHeight
-
-		galleryCollapseButton.innerHTML = isExpanded
-			? "Mniej &#x2191;"
-			: "Więcej &#x2193;"
-	})
+	const updateHeight = () =>
+		gallery.style.setProperty("--height", `${gallery.scrollHeight}px`)
+	new ResizeObserver(updateHeight).observe(gallery.querySelector("ul")!)
+	updateHeight()
 
 	gallery.querySelectorAll("img").forEach(img => {
 		const show = () => (img.dataset.loaded = "true")
@@ -71,14 +69,10 @@ const images = await Promise.all(_images.map(async ({ data }) => data))
 		else img.addEventListener("load", show, { once: true })
 	})
 
-	const modalImg = document.querySelector<HTMLImageElement>("#image-modal img")!
-	gallery
-		.querySelectorAll<HTMLButtonElement>("[data-modal-open]")
-		.forEach(button => {
-			button.addEventListener("click", () => {
-				const img = button.querySelector("img")!
-				modalImg.src = img.src
-				modalImg.alt = img.alt
-			})
-		})
+	gallery.addEventListener("click", e => {
+		const target = e.target as HTMLElement
+
+		if (target.closest("[data-collapse-button]"))
+			gallery.dataset.expanded = String(gallery.dataset.expanded !== "true")
+	})
 </script>
