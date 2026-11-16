@@ -1,5 +1,6 @@
 ---
 import Button from "./ui/Button.astro"
+import Icon from "./ui/Icon.astro"
 
 const dropdownItems: { href: string; label: string }[] = [
 	{ href: "#fashion", label: "Fotografia Modowa" },
@@ -23,31 +24,12 @@ const liClass =
 			Anna Visuals
 		</a>
 		<Button class="sm:hidden" data-menu-trigger>
-			<svg
-				class="size-6"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-			>
-				<path d="M4 6h16M4 12h16M4 18h16" />
-			</svg>
+			<Icon name="hamburger" class="size-6" />
 		</Button>
 		<ul class="hidden gap-8 group-data-[menu-open=true]:flex max-sm:fixed max-sm:inset-0 max-sm:flex-col max-sm:items-end max-sm:gap-12 max-sm:overflow-y-auto max-sm:overscroll-contain max-sm:bg-black/50 max-sm:px-12 max-sm:py-10 max-sm:text-5xl max-sm:font-semibold max-sm:text-white max-sm:backdrop-blur-md sm:flex">
 			<li class={`sm:hidden ${liClass}`} style="--i: 0">
 				<Button data-menu-close>
-					<svg
-						class="size-12"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						aria-hidden="true"
-					>
-						<path d="M6 6l12 12M18 6L6 18" />
-					</svg>
+					<Icon name="close" class="size-12" />
 				</Button>
 			</li>
 			<li class={liClass} style="--i: 1">
@@ -59,18 +41,10 @@ const liClass =
 			<li class={`relative ${liClass}`} style="--i: 3">
 				<Button class="ml-auto flex items-center gap-2" data-dropdown-trigger>
 					Oferta
-					<svg
+					<Icon
+						name="chevron"
 						class="size-12 transition-transform group-data-[dropdown-open=true]:rotate-180 sm:size-4"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="1.7"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						aria-hidden="true"
-					>
-						<path d="m6 9 6 6 6-6" />
-					</svg>
+					/>
 				</Button>
 				<div class="invisible right-0 mt-2 grid w-max grid-rows-[0fr] transition-[grid-template-rows,visibility] duration-300 ease-in-out group-data-[dropdown-open=true]:visible group-data-[dropdown-open=true]:grid-rows-[1fr] sm:absolute sm:rounded-md sm:shadow-lg">
 					<div class="overflow-hidden sm:rounded-md">

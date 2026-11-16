@@ -2,6 +2,7 @@
 import { getImage, Image } from "astro:assets"
 import { getCollection } from "astro:content"
 import Button from "./ui/Button.astro"
+import Icon from "./ui/Icon.astro"
 
 const _images = await getCollection("images")
 const images = await Promise.all(
@@ -42,35 +43,14 @@ const images = await Promise.all(
 	>
 		<span class="group-data-[expanded=true]:hidden">Więcej</span>
 		<span class="group-data-[expanded=false]:hidden">Mniej</span>
-		<svg
-			class="size-6 group-data-[expanded=true]:rotate-180"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="1.7"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-			aria-hidden="true"
-		>
-			<path d="m6 9 6 6 6-6" />
-		</svg>
+		<Icon name="chevron" class="size-6 group-data-[expanded=true]:rotate-180" />
 	</Button>
 </section>
 
 <dialog class="m-auto rounded-lg shadow-lg transition-[opacity,scale,display,overlay] transition-discrete duration-300 ease-in-out backdrop:bg-black/50 backdrop:backdrop-blur-xs open:scale-100 open:opacity-100 starting:open:scale-90 starting:open:opacity-0">
 	<img data-modal-img src="" alt="" class="max-h-[90dvh] max-w-[90dvh] object-contain" />
 	<Button class="absolute top-4 right-4" data-modal-close>
-		<svg
-			class="size-10 text-white"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			aria-hidden="true"
-		>
-			<path d="M6 6l12 12M18 6L6 18" />
-		</svg>
+		<Icon name="close" class="size-10 text-white" />
 	</Button>
 </dialog>
 
