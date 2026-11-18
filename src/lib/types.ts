@@ -3,5 +3,6 @@ export type Service = {
 	title: string
 	subtitle: string
 	text: string
-	image: ImageMetadata | null
+	thumbnail: ImageMetadata | null
+	images: { src: ImageMetadata; alt: string }[] | null
 }

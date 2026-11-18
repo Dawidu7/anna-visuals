@@ -1,71 +1,134 @@
 ---
 import { Image } from "astro:assets"
+import { getCollection } from "astro:content"
 import artisticImage from "~/assets/images/artistic.webp"
 import brandingImage from "~/assets/images/branding.webp"
 import fashionImage from "~/assets/images/fashion.webp"
 import portraitImage from "~/assets/images/portrait.webp"
 import { type Service } from "~/lib/types"
+import { cn } from "~/lib/utils"
+import Button from "./ui/Button.astro"
 
-export const services: Service[] = [
+type Tag = "artistic" | "branding" | "fashion" | "portrait" | "portrait-sensual"
+
+const getImages = async (...tags: Tag[]) =>
+	(await getCollection("images"))
+		.filter(({ data }) => tags.some(tag => data.tags.includes(tag)))
+		.map(({ data }) => ({ src: data.src, alt: data.alt }))
+
+const services: Service[] = [
 	{
 		id: "fashion",
 		title: "FOTOGRAFIA MODOWA",
 		subtitle: "LOOKBOOKI • KAMPANIE MODOWE • SESJE DLA MAREK I BUTIKÓW",
 		text: "Moda to coś więcej niż ubrania. To charakter, emocje i sposób, w jaki chcemy być postrzegani. Tworzę kadry dla marek, projektantów i butików, które chcą pokazać swoje kolekcje w sposób przyciągający uwagę. Od lookbooków po kampanie, które opowiadają historię marki.",
-		image: fashionImage,
+		thumbnail: fashionImage,
+		images: await getImages("fashion"),
 	},
 	{
 		id: "portrait",
 		title: "PORTRET & SENSUAL DAMSKA I MĘSKA",
 		subtitle: "PORTRET KOBIECY • SENSUAL • PORTRET MĘSKI",
 		text: "Nie musisz być modelką/modelem ani wiedzieć, jak pozować. Nie musisz też niczego udowadniać. Podczas sesji szukamy Twojego charakteru, emocji i tego, co czyni Cię wyjątkową lub wyjątkowym. Od subtelnych portretów, przez kobiecą i męską sensualność, aż po artystyczny akt. Bez udawania. Na Twoich zasadach.",
-		image: portraitImage,
+		thumbnail: portraitImage,
+		images: await getImages("portrait", "portrait-sensual"),
 	},
 	{
 		id: "branding",
 		title: "FOTOGRAFIA WIZERUNKOWA",
 		subtitle: "PERSONAL BRANDING • PORTRETY BIZNESOWE • SESJE WIZERUNKOWE",
 		text: "Zanim ktoś pozna Twoją historię, często najpierw widzi Twój wizerunek. Zadbajmy o to, żeby mówił o Tobie to, co naprawdę chcesz przekazać. Tworzę portrety biznesowe i zdjęcia dla osób, które rozwijają własne marki, budują swoją pozycję i chcą pokazać się światu z pewnością siebie.",
-		image: brandingImage,
+		thumbnail: brandingImage,
+		images: await getImages("branding"),
 	},
 	{
 		id: "couples",
 		title: "SESJE DLA PAR • SESJE",
 		subtitle: "NARZECZEŃSKIE • FOTOGRAFIA BLISKOŚCI",
 		text: "Nie trzeba idealnych póz ani wyreżyserowanych gestów. Najpiękniejsze jest to, co dzieje się między Wami. Spojrzenia, bliskość, śmiech i drobne gesty, których często nawet nie zauważacie. Możemy postawić na naturalność albo stworzyć coś bardziej modowego i filmowego. Najważniejsze, żeby te zdjęcia były naprawdę Wasze.",
-		image: null,
+		thumbnail: null,
+		images: null,
 	},
 	{
 		id: "artistic",
 		title: "FOTOGRAFIA ARTYSTYCZNA",
 		subtitle: "ART MAKE-UP • TEATRALNE STYLIZACJE • NIEOCZYWISTE KREACJE",
 		text: "To przestrzeń dla wyobraźni, odwagi i niebanalnych pomysłów. Tworzę fotografie, w których makijaż staje się sztuką, stylizacja opowiada historię, a światło i forma budują wyjątkowy klimat. Od teatralnych charakteryzacji po awangardowe kreacje i portrety wykraczające poza klasyczne ramy fotografii.",
-		image: artisticImage,
+		thumbnail: artisticImage,
+		images: await getImages("artistic"),
 	},
 ]
+
+const GALLERY_ROW_COUNT = 3
 ---
 
 <section tabindex="-1">
-	<ul>
-		{services.map(s => (
-			<li class="group px-6 py-8 odd:bg-[#eeeeee] even:bg-[#dddddd]" id={s.id}>
-				<div class="mx-auto max-w-4xl items-center gap-20 space-y-4 group-even:flex-row-reverse sm:flex">
-					<div class="sm:w-1/2">
-						{s.image ? (
-							<Image src={s.image} alt="" />
-						) : (
-							<div class="aspect-3/4 w-full bg-black/20" />
+	{services.map(s => (
+		<div
+			data-service
+			data-gallery-open="false"
+			id={s.id}
+			class="group relative flex px-6 py-8 odd:bg-[#eeeeee] even:bg-[#dddddd]"
+		>
+			<div class="mx-auto max-w-4xl items-center gap-20 space-y-4 transition-[max-width] duration-300 group-even:flex-row-reverse group-data-[gallery-open=true]:max-w-6xl sm:flex">
+				{s.thumbnail && (
+					<div class="relative h-150 sm:flex-1">
+						<Image
+							src={s.thumbnail}
+							alt=""
+							class="h-full object-contain opacity-100 group-data-[gallery-open=true]:opacity-0"
+						/>
+						{s.images && (
+							<div class="absolute inset-0 group-data-[gallery-open=false]:hidden">
+								<div class="flex h-full min-w-full flex-col gap-4 overflow-x-auto overflow-y-hidden">
+									{Array.from({ length: GALLERY_ROW_COUNT }, (_, row) => {
+										if (!s.images) return
+										const imagesPerRow = Math.ceil(s.images.length / GALLERY_ROW_COUNT)
+										return (
+											<ul class="flex min-h-0 w-max flex-1 gap-4">
+												{s.images.slice(row * imagesPerRow, (row + 1) * imagesPerRow).map(img => (
+													<li>
+														<Button class="h-full">
+															<Image
+																src={img.src}
+																alt={img.alt}
+																class="h-full w-auto object-cover"
+															/>
+														</Button>
+													</li>
+												))}
+											</ul>
+										)
+									})}
+								</div>
+							</div>
 						)}
 					</div>
-					<div class="space-y-6 text-center sm:w-1/2 sm:text-left">
-						<div class="space-y-2">
-							<h3 class="text-2xl font-semibold uppercase">{s.title}</h3>
-							<h5 class="text-xs">{s.subtitle}</h5>
-						</div>
-						<p>{s.text}</p>
+				)}
+				<div class={cn("space-y-6 text-center sm:max-w-100", s.thumbnail && "sm:text-justify")}>
+					<div class="space-y-1">
+						<h3 class="text-2xl font-semibold uppercase">{s.title}</h3>
+						<h5 class="text-xs">{s.subtitle}</h5>
 					</div>
+					<p>{s.text}</p>
+					{s.images && (
+						<Button data-expand class="w-full rounded-md bg-black py-2 text-center text-white">
+							Zobacz galerię ({s.images.length} zdjęć)
+						</Button>
+					)}
 				</div>
-			</li>
-		))}
-	</ul>
+			</div>
+		</div>
+	))}
 </section>
+
+<script>
+	document.querySelectorAll<HTMLElement>("[data-service]").forEach(service => {
+		service.addEventListener("click", e => {
+			const target = e.target as HTMLElement
+
+			if (target.closest("[data-expand]"))
+				service.dataset.galleryOpen = String(service.dataset.galleryOpen === "false")
+		})
+	})
+</script>
